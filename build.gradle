@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
+	id 'com.google.protobuf' version '0.8.10'
 }
 
 group = 'com.linecorp.devday.handson'
@@ -20,6 +21,8 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'com.linecorp.armeria:armeria-spring-boot-webflux-starter'
+	implementation 'com.linecorp.armeria:armeria-grpc'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -30,4 +33,42 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+dependencyManagement {
+	imports {
+		mavenBom 'com.linecorp.armeria:armeria-bom:0.96.0'
+	}
+}
+
+protobuf {
+	protoc {
+		artifact = "com.google.protobuf:protoc:3.10.0"
+	}
+	plugins {
+		grpc {
+			artifact = 'io.grpc:protoc-gen-grpc-java:1.25.0'
+		}
+	}
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {}
+		}
+		all().each { task ->
+			task.generateDescriptorSet = true
+			task.descriptorSetOptions.includeSourceInfo = true
+			task.descriptorSetOptions.includeImports = true
+			task.descriptorSetOptions.path =
+					"${buildDir}/resources/main/META-INF/armeria/grpc/service-name.dsc"
+		}
+	}
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir 'build/generated/source/proto/main/grpc'
+			srcDir 'build/generated/source/proto/main/java'
+		}
+	}
 }
