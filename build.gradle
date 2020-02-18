@@ -1,8 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.1.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'org.springframework.boot' version '2.2.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
-	id 'com.google.protobuf' version '0.8.10'
+	id 'com.google.protobuf' version '0.8.11'
 }
 
 group = 'com.linecorp.devday.handson'
@@ -37,17 +37,17 @@ test {
 
 dependencyManagement {
 	imports {
-		mavenBom 'com.linecorp.armeria:armeria-bom:0.96.0'
+		mavenBom 'com.linecorp.armeria:armeria-bom:0.98.2'
 	}
 }
 
 protobuf {
 	protoc {
-		artifact = "com.google.protobuf:protoc:3.10.0"
+		artifact = "com.google.protobuf:protoc:3.11.0"
 	}
 	plugins {
 		grpc {
-			artifact = 'io.grpc:protoc-gen-grpc-java:1.25.0'
+			artifact = 'io.grpc:protoc-gen-grpc-java:1.27.0'
 		}
 	}
 	generateProtoTasks {
